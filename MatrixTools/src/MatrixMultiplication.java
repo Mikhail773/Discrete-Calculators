@@ -7,16 +7,16 @@ public class MatrixMultiplication {
 		Scanner input = new Scanner(System.in);
 		char response = 'Y';
 		do {
-			System.out.print("Please input m: ");
+			System.out.print("Please input m: "); //Number of rows in matrix
 			int m = input.nextInt();
-			System.out.print("Please input n: ");
+			System.out.print("Please input n: "); //Number of columns in matrix
 			int n = input.nextInt();
-			System.out.print("Please input the value of R: ");
+			System.out.print("Please input the value of R: "); //Number of compositions to do
 			int R = input.nextInt();
-			int[][] matrix1 = new int[m][n];
-			int[][] finalMatrix = new int[m][n];
-			int[][] finalSum = new int[m][n];
-			System.arraycopy(matrix1, 0, finalMatrix, 0, matrix1.length);
+			int[][] matrix1 = new int[m][n];	//The initial relation
+			int[][] finalMatrix = new int[m][n]; //Last matrix composed
+			int[][] finalSum = new int[m][n]; //The sum of the composed matrices and the first matrix
+			System.arraycopy(matrix1, 0, finalMatrix, 0, matrix1.length); //Copy the first matrix to finalMatrix to start the recursion
 
 			System.out.println("Please input the matrix: ");
 			System.out.print("New Row: ");
@@ -27,12 +27,11 @@ public class MatrixMultiplication {
 				if (row < (m - 1))
 					System.out.print("New Row: ");
 			}
-			System.out.println();
-			System.out.println("*************************************");
+			System.out.println("\n*************************************");
 
-			multiplyMatrices(matrix1, finalMatrix, finalSum, R, count);
+			multiplyMatrices(matrix1, finalMatrix, finalSum, R, count); //Recursive method
 			System.out.println("*************************************");
-			if ((m == R)) {
+			if ((m == R)) {	//Checks transitivity
 				if (Arrays.deepEquals(matrix1, finalSum)) {
 					System.out.println("The Relation is Transitive");
 					displayProduct(finalSum);
@@ -64,7 +63,7 @@ public class MatrixMultiplication {
 				for (int j = 0; j < c; j++) {
 					for (int k = 0; k < c; k++) {
 						finalProduct[i][j] += firstMatrix[i][k] * finalMatrix[k][j];
-						finalSum[i][j] += finalMatrix[i][j] + finalProduct[i][j];
+						finalSum[i][j] += finalMatrix[i][j] + finalProduct[i][j]; //Calculates sum of compositions for checking transitivity
 					}
 					if (finalMatrix[i][j] > 1)
 						finalMatrix[i][j] = 1;
@@ -75,7 +74,7 @@ public class MatrixMultiplication {
 
 			System.out.println("The value of R" + count + " is : ");
 			displayProduct(finalMatrix);
-			return multiplyMatrices(firstMatrix, finalProduct, finalSum, R - 1, count + 1);
+			return multiplyMatrices(firstMatrix, finalProduct, finalSum, R - 1, count + 1); //Recursive call
 		}
 	}
 
