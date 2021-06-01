@@ -13,6 +13,9 @@ public class MatrixMultiplication {
 			int n = input.nextInt();
 			System.out.print("Please input the value of R: "); // Number of compositions to do
 			int R = input.nextInt();
+			System.out.print("Do you want to find number of paths? "); // Number of compositions to do
+			char findPaths = input.next().charAt(0);
+			
 			int[][] matrix1 = new int[m][n]; // The initial relation
 			int[][] finalMatrix = new int[m][n]; // Last matrix composed
 			int[][] finalSum = new int[m][n]; // The sum of the composed matrices and the first matrix
@@ -29,15 +32,15 @@ public class MatrixMultiplication {
 			}
 			System.out.println("\n*************************************");
 
-			multiplyMatrices(matrix1, finalMatrix, finalSum, R, count); // Recursive method
+			multiplyMatrices(matrix1, finalMatrix, finalSum, R, count, findPaths); // Recursive method
 			System.out.println("*************************************");
-			if ((m == R)) { // Checks transitivity
+			if (m == R & (findPaths == 'n' | findPaths == 'N')) { // Checks transitivity
 				if (Arrays.deepEquals(matrix1, finalSum)) {
 					System.out.println("The Relation is Transitive");
 					displayProduct(finalSum);
 				} else {
 					System.out.println("The Relation is NOT Transitive");
-					System.out.println("The Transitive matrix is: ");
+					System.out.println("The Transitive Closure is: ");
 					displayProduct(finalSum);
 				}
 			}
@@ -48,7 +51,7 @@ public class MatrixMultiplication {
 
 	}
 
-	public static int[][] multiplyMatrices(int[][] firstMatrix, int[][] finalMatrix, int[][] finalSum, int R, int count) {
+	public static int[][] multiplyMatrices(int[][] firstMatrix, int[][] finalMatrix, int[][] finalSum, int R, int count, char findPaths) {
 		int r = firstMatrix[0].length;
 		int c = firstMatrix.length;
 		int[][] finalProduct = new int[r][c];
@@ -63,19 +66,21 @@ public class MatrixMultiplication {
 				for (int j = 0; j < c; j++) {
 					for (int k = 0; k < c; k++) {
 						finalProduct[i][j] += firstMatrix[i][k] * finalMatrix[k][j];
-						finalSum[i][j] += finalMatrix[i][j] + finalProduct[i][j]; // Calculates sum of compositions for
-																					// checking transitivity
+						finalSum[i][j] += finalMatrix[i][j] + finalProduct[i][j]; 
+						// Calculates sum of compositions for checking transitivity
 					}
-					if (finalMatrix[i][j] > 1)
-						finalMatrix[i][j] = 1;
-					if (finalSum[i][j] > 1)
-						finalSum[i][j] = 1;
+					if(findPaths == 'n' | findPaths == 'N') {
+						if (finalMatrix[i][j] > 1)
+							finalMatrix[i][j] = 1;
+						if (finalSum[i][j] > 1)
+							finalSum[i][j] = 1;
+					}
 				}
 			}
 
 			System.out.println("The value of R" + count + " is : ");
 			displayProduct(finalMatrix);
-			return multiplyMatrices(firstMatrix, finalProduct, finalSum, R - 1, count + 1); // Recursive call
+			return multiplyMatrices(firstMatrix, finalProduct, finalSum, R - 1, count + 1, findPaths); // Recursive call
 		}
 	}
 
